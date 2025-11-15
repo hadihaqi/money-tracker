@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:money_tracker/providers/users.dart';
 import 'package:money_tracker/screens/auth/login.dart';
 
-class Signup extends StatefulWidget {
+class Signup extends ConsumerStatefulWidget {
   const Signup({super.key});
 
   @override
-  State<Signup> createState() => _SignupState();
+  ConsumerState<Signup> createState() => _SignupState();
 }
 
-class _SignupState extends State<Signup> {
+class _SignupState extends ConsumerState<Signup> {
   String _fullName = '';
   String _enteredEmail = '';
   String _enteredPassword = '';
@@ -33,6 +34,7 @@ class _SignupState extends State<Signup> {
 
   @override
   Widget build(BuildContext context) {
+    final users = ref.watch(usersProvider);
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -85,9 +87,9 @@ class _SignupState extends State<Signup> {
                         if (!regex.hasMatch(value)) {
                           return 'Please enter a valid email';
                         }
-                        // if (users.contains(valu)) {
-                          
-                        // }
+                        if (users.any((user) => user.email == value)) {
+                          return 'This email already has been registered.';
+                        }
                         return null;
                       },
                       onSaved: (newValue) {
