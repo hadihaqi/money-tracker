@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:money_tracker/providers/users.dart';
+import 'package:money_tracker/screens/auth/login.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -13,10 +15,20 @@ class _SignupState extends State<Signup> {
   String _enteredPassword = '';
   String _enteredConfirmPassword = '';
 
+  final _passwordController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
   void _onSave() {
-    if (_formKey.currentState!.validate()) {}
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _passwordController.dispose();
   }
 
   @override
@@ -61,6 +73,8 @@ class _SignupState extends State<Signup> {
                         labelText: 'Email',
                         counterText: '',
                       ),
+                      keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.none,
                       validator: (value) {
                         final regex = RegExp(
                           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
@@ -71,18 +85,36 @@ class _SignupState extends State<Signup> {
                         if (!regex.hasMatch(value)) {
                           return 'Please enter a valid email';
                         }
+                        // if (users.contains(valu)) {
+                          
+                        // }
                         return null;
+                      },
+                      onSaved: (newValue) {
+                        _enteredEmail = newValue!;
                       },
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
+                      controller: _passwordController,
                       maxLength: 50,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Password',
                         counterText: '',
-                        helperText:
-                            'Enter a valid email (e.g : name@example.com)',
+                        // helperMaxLines: 2,
+                        helper: Row(
+                          children: [
+                            Icon(Icons.info, size: 20, color: Colors.grey),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'At least 8 chars, incl. upper, lower, number & symbol.',
+                                style: TextStyle(fontSize: 12, height: 1.1),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       validator: (value) {
                         final regex = RegExp(
@@ -95,6 +127,9 @@ class _SignupState extends State<Signup> {
                           return 'Password is not strong enough!';
                         }
                         return null;
+                      },
+                      onSaved: (newValue) {
+                        _enteredPassword = newValue!;
                       },
                     ),
                     const SizedBox(height: 10),
@@ -106,14 +141,11 @@ class _SignupState extends State<Signup> {
                         counterText: '',
                       ),
                       validator: (value) {
-                        final regex = RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                        );
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your password.';
+                          return 'Enter your password again.';
                         }
-                        if (!regex.hasMatch(value)) {
-                          return 'Password is not strong enough!';
+                        if (value != _passwordController.text) {
+                          return 'Confirm password doesn\'t match with password';
                         }
                         return null;
                       },
@@ -132,10 +164,19 @@ class _SignupState extends State<Signup> {
                       children: [
                         Text('Alreay have an account?'),
                         const SizedBox(width: 8),
-                        Text(
-                          'log in',
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (ctx) => const Login(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'log in',
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
                         ),
                       ],
