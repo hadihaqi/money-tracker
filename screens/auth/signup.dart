@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:money_tracker/models/user.dart';
 import 'package:money_tracker/providers/users.dart';
 import 'package:money_tracker/screens/auth/login.dart';
 
@@ -14,7 +15,6 @@ class _SignupState extends ConsumerState<Signup> {
   String _fullName = '';
   String _enteredEmail = '';
   String _enteredPassword = '';
-  String _enteredConfirmPassword = '';
 
   final _passwordController = TextEditingController();
 
@@ -23,7 +23,36 @@ class _SignupState extends ConsumerState<Signup> {
   void _onSave() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      final newUser = User(
+        fullName: _fullName,
+        email: _enteredEmail,
+        password: _enteredPassword,
+      );
+      ref.read(usersProvider.notifier).addUser(newUser);
     }
+  }
+
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Well done🎉"),
+          content: Text("You have successfully signed up!"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (ctx) => const Login()),
+                );
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
