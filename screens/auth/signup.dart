@@ -16,6 +16,9 @@ class _SignupState extends ConsumerState<Signup> {
   String _enteredEmail = '';
   String _enteredPassword = '';
 
+  bool _showPasswod = false;
+  bool _showConfirmPassword = false;
+
   final _passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
@@ -28,13 +31,17 @@ class _SignupState extends ConsumerState<Signup> {
         email: _enteredEmail,
         password: _enteredPassword,
       );
+
       ref.read(usersProvider.notifier).addUser(newUser);
+
+      _showSignUpSuccessDialog();
     }
   }
 
-  void _showDialog() {
+  void _showSignUpSuccessDialog() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Well done🎉"),
@@ -43,8 +50,11 @@ class _SignupState extends ConsumerState<Signup> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (ctx) => const Login()),
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (ctx) =>
+                        Login(email: _enteredEmail, password: _enteredPassword),
+                  ),
                 );
               },
               child: const Text('OK'),
@@ -82,6 +92,7 @@ class _SignupState extends ConsumerState<Signup> {
                     TextFormField(
                       maxLength: 50,
                       decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.person),
                         labelText: 'Name',
                         border: OutlineInputBorder(),
                         counterText: '',
@@ -100,6 +111,7 @@ class _SignupState extends ConsumerState<Signup> {
                     TextFormField(
                       maxLength: 50,
                       decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.email),
                         border: OutlineInputBorder(),
                         labelText: 'Email',
                         counterText: '',
@@ -129,11 +141,24 @@ class _SignupState extends ConsumerState<Signup> {
                     TextFormField(
                       controller: _passwordController,
                       maxLength: 50,
+                      obscureText: !_showPasswod,
                       decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.key),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _showPasswod = !_showPasswod;
+                            });
+                          },
+                          icon: Icon(
+                            _showPasswod
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                        ),
                         border: OutlineInputBorder(),
                         labelText: 'Password',
                         counterText: '',
-                        // helperMaxLines: 2,
                         helper: Row(
                           children: [
                             Icon(Icons.info, size: 20, color: Colors.grey),
@@ -148,13 +173,18 @@ class _SignupState extends ConsumerState<Signup> {
                         ),
                       ),
                       validator: (value) {
-                        final regex = RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                        final passwordRegex = RegExp(
+                          r'^(?=.*[A-Z])' // at least one uppercase letter
+                          r'(?=.*[a-z])' // at least one lowercase letter
+                          r'(?=.*\d)' // at least one digit
+                          r'(?=.*[!@#\$&*~])' // at least one special character
+                          r'.{8,}$', // at least 8 characters long
                         );
+
                         if (value == null || value.isEmpty) {
                           return 'Please enter your password.';
                         }
-                        if (!regex.hasMatch(value)) {
+                        if (!passwordRegex.hasMatch(value)) {
                           return 'Password is not strong enough!';
                         }
                         return null;
@@ -165,8 +195,22 @@ class _SignupState extends ConsumerState<Signup> {
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
+                      obscureText: !_showConfirmPassword,
                       maxLength: 50,
                       decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.key),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _showConfirmPassword = !_showConfirmPassword;
+                            });
+                          },
+                          icon: Icon(
+                            _showConfirmPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                        ),
                         border: OutlineInputBorder(),
                         labelText: 'Confirm password',
                         counterText: '',
@@ -197,10 +241,8 @@ class _SignupState extends ConsumerState<Signup> {
                         const SizedBox(width: 8),
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (ctx) => const Login(),
-                              ),
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (ctx) => Login()),
                             );
                           },
                           child: Text(
