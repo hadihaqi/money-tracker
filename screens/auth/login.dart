@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:money_tracker/providers/users.dart';
 import 'package:money_tracker/screens/auth/signup.dart';
+import 'package:money_tracker/screens/tabs_screen.dart';
 
 class Login extends ConsumerStatefulWidget {
   Login({this.email, this.password, super.key});
@@ -34,6 +35,10 @@ class _LoginState extends ConsumerState<Login> {
                 user.password == _enteredPassword,
           );
       if (authResult) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (ctx) => const TabsScreen()),
+          (Route<dynamic> route) => false,
+        );
       } else {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -50,10 +55,7 @@ class _LoginState extends ConsumerState<Login> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Login'),
-          // automaticallyImplyLeading: false,
-        ),
+        appBar: AppBar(title: const Text('Login')),
         body: Center(
           child: SingleChildScrollView(
             child: Padding(
