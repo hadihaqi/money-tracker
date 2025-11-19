@@ -7,6 +7,7 @@ class UserOverview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      contentPadding: EdgeInsets.zero,
       leading: Stack(
         alignment: AlignmentGeometry.center,
         children: [
