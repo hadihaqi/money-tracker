@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:money_tracker/screens/dashboard_screen.dart';
+import 'package:money_tracker/screens/dashboard/dashboard_screen.dart';
 import 'package:money_tracker/screens/reports_screen.dart';
 
 class TabsScreen extends StatefulWidget {
@@ -52,7 +52,6 @@ class _TabsScreenState extends State<TabsScreen> {
           child: Icon(CupertinoIcons.add),
         ),
       ),
-      appBar: AppBar(title: Text(_currentIndex == 0 ? 'Dashboard' : 'Reports')),
       body: content,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
