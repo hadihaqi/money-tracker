@@ -9,6 +9,7 @@ final dummyTransactions = [
     amount: 45.90,
     date: DateTime.now().subtract(const Duration(days: 1)),
     category: dummyCategories[0],
+    type: TransactionType.expense,
   ),
   Transaction(
     userId: dummyUsers[0].id,
@@ -16,6 +17,7 @@ final dummyTransactions = [
     amount: 18.50,
     date: DateTime.now().subtract(const Duration(days: 2)),
     category: dummyCategories[1],
+    type: TransactionType.expense,
   ),
   Transaction(
     userId: dummyUsers[1].id,
@@ -23,6 +25,7 @@ final dummyTransactions = [
     amount: 89.99,
     date: DateTime.now().subtract(const Duration(days: 3)),
     category: dummyCategories[2],
+    type: TransactionType.expense,
   ),
   Transaction(
     userId: dummyUsers[2].id,
@@ -30,5 +33,6 @@ final dummyTransactions = [
     amount: 3200.00,
     date: DateTime.now().subtract(const Duration(days: 5)),
     category: dummyCategories[3],
+    type: TransactionType.income,
   ),
 ];
