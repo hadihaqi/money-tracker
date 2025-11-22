@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-String formatAdvancedRelativeDate(DateTime date) {
+String formatRelativeDate(DateTime date) {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
   final input = DateTime(date.year, date.month, date.day);
