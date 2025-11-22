@@ -1,31 +1,40 @@
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class ThousandsSeparatorInputFormatter extends TextInputFormatter {
-  final formatter = NumberFormat.decimalPattern(); // adds commas
+class DecimalThousandsFormatter extends TextInputFormatter {
+  final formatter = NumberFormat("#,##0.########");
 
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    // If empty → return empty
+    // Empty input
     if (newValue.text.isEmpty) {
       return newValue.copyWith(text: '');
     }
 
-    // Remove all commas
-    String cleaned = newValue.text.replaceAll(',', '');
+    // Allow only digits and one dot
+    final cleaned = newValue.text.replaceAll(',', '');
 
-    // If only numbers
-    if (int.tryParse(cleaned) == null) {
-      return oldValue; // block invalid input
+    // If invalid decimal → block
+    if (double.tryParse(cleaned) == null) {
+      return oldValue;
     }
 
-    // Format with commas
-    String formatted = formatter.format(int.parse(cleaned));
+    // Split into integer + decimal
+    final parts = cleaned.split('.');
+    String integerPart = parts[0];
+    String decimalPart = parts.length > 1 ? parts[1] : '';
 
-    // Put cursor at end
+    // Format integer part with commas only
+    integerPart = NumberFormat('#,##0').format(int.parse(integerPart));
+
+    // Rebuild final formatted text
+    String formatted = decimalPart.isNotEmpty
+        ? '$integerPart.$decimalPart'
+        : integerPart;
+
     return TextEditingValue(
       text: formatted,
       selection: TextSelection.collapsed(offset: formatted.length),
