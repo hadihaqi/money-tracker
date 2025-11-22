@@ -2,7 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:money_tracker/screens/dashboard/dashboard_screen.dart';
+import 'package:money_tracker/screens/add_transaction.dart';
+import 'package:money_tracker/screens/dashboard_screen.dart';
 import 'package:money_tracker/screens/reports_screen.dart';
 
 class TabsScreen extends StatefulWidget {
@@ -33,7 +34,11 @@ class _TabsScreenState extends State<TabsScreen> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (ctx) => const AddTransaction()));
+        },
         shape: CircleBorder(),
         child: Container(
           width: 60,
