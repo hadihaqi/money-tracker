@@ -48,16 +48,22 @@ String formatRelativeDate(DateTime date) {
   return DateFormat('MMM dd, yyyy').format(date);
 }
 
-String formatNumberForDisplay(double number) {
-  String formattedString;
+String formatNumberForDisplay(num number) {
+  final NumberFormat formatter;
 
-  if (number == number.roundToDouble()) {
-    // If 'number' is a whole number (e.g., 10.0 or 15.0)
-    formattedString = "${number.toStringAsFixed(0)}%";
+  // 1. Check if the number is mathematically a whole number.
+  //    We use number.roundToDouble() for double comparison or check if it's an int.
+  if (number is int || number == number.roundToDouble()) {
+    // 2. If it's a whole number (e.g., 12345.0):
+    //    Use a pattern that includes thousands separators (,) but NO decimal places.
+    //    '###,##0' is a standard pattern for integers with separators.
+    formatter = NumberFormat('###,##0');
   } else {
-    // If 'number' has a fractional part (e.g., 10.123)
-    formattedString = "${number.toStringAsFixed(1)}%";
+    // 3. If it has a fractional part (e.g., 12345.67):
+    //    Use a pattern that includes thousands separators (,) AND one decimal place.
+    //    '###,##0.0' is used to enforce exactly one decimal place.
+    formatter = NumberFormat('###,##0.0');
   }
 
-  return formattedString;
+  return formatter.format(number);
 }
