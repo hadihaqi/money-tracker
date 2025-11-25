@@ -12,7 +12,7 @@ class MyPieChart extends StatelessWidget {
     return PieChart(
       PieChartData(
         sectionsSpace: 2,
-        centerSpaceRadius: 40,
+        centerSpaceRadius: 38,
         sections: _buildSections(),
       ),
     );
