@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:money_tracker/screens/dashboard/widgets/account_overview.dart';
-import 'package:money_tracker/screens/dashboard/widgets/transactions.dart';
-import 'package:money_tracker/screens/dashboard/widgets/user_overview.dart';
+
+import 'package:money_tracker/widgets/charts/charts_slider.dart';
+import 'package:money_tracker/widgets/transactions.dart';
+import 'package:money_tracker/widgets/user_overview.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -16,7 +17,9 @@ class DashboardScreen extends StatelessWidget {
             children: [
               UserOverview(),
               const SizedBox(height: 10),
-              AccountOverview(),
+
+              AspectRatio(aspectRatio: 2 / 1.4, child: ChartsSlider()),
+
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -42,7 +45,7 @@ class DashboardScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              Transactions(),
+              Expanded(child: Transactions()),
             ],
           ),
         ),
