@@ -27,7 +27,7 @@ class _SignupState extends ConsumerState<Signup> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       final newUser = User(
-        fullName: _fullName,
+        name: _fullName,
         email: _enteredEmail,
         password: _enteredPassword,
       );
@@ -77,9 +77,17 @@ class _SignupState extends ConsumerState<Signup> {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
+        _formKey.currentState!.validate();
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('Sign Up')),
+        appBar: AppBar(
+          title: Text(
+            'Sign Up',
+            style: TextStyle(
+              color: Theme.of(context).appBarTheme.foregroundColor,
+            ),
+          ),
+        ),
         body: Center(
           child: SingleChildScrollView(
             child: Padding(
@@ -159,18 +167,6 @@ class _SignupState extends ConsumerState<Signup> {
                         border: OutlineInputBorder(),
                         labelText: 'Password',
                         counterText: '',
-                        helper: Row(
-                          children: [
-                            Icon(Icons.info, size: 20, color: Colors.grey),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                'At least 8 chars, incl. upper, lower, number & symbol.',
-                                style: TextStyle(fontSize: 12, height: 1.1),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
                       validator: (value) {
                         final passwordRegex = RegExp(
@@ -192,6 +188,30 @@ class _SignupState extends ConsumerState<Signup> {
                       onSaved: (newValue) {
                         _enteredPassword = newValue!;
                       },
+                    ),
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.info,
+                            size: 20,
+                            color: Colors.red.withValues(alpha: 0.5),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'At least 8 chars, incl. upper, lower, number & symbol.',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                                height: 1.1,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
@@ -225,13 +245,16 @@ class _SignupState extends ConsumerState<Signup> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _onSave,
-                      child: const Text(
-                        'SUBMIT',
-                        style: TextStyle(letterSpacing: 1.5),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 80,
+                          vertical: 15,
+                        ),
                       ),
+                      child: const Text('Submit'),
                     ),
                     const SizedBox(height: 40),
                     Row(
@@ -249,6 +272,9 @@ class _SignupState extends ConsumerState<Signup> {
                             'log in',
                             style: TextStyle(
                               decoration: TextDecoration.underline,
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
                             ),
                           ),
                         ),

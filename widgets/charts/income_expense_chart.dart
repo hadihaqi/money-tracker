@@ -13,7 +13,7 @@ class IncomeExpenseChart extends ConsumerWidget {
     final currentUser = ref.watch(currentUserProvider);
 
     final currentUserTransactions = transactions.where(
-      (t) => t.userId == currentUser.id,
+      (t) => t.userId == currentUser!.id,
     );
 
     final totalIncome = currentUserTransactions
@@ -23,6 +23,10 @@ class IncomeExpenseChart extends ConsumerWidget {
     final totalExpense = currentUserTransactions
         .where((t) => t.category.type == CategoryType.expense)
         .fold(0.0, (sum, t) => sum + t.amount);
+
+    if (currentUserTransactions.isEmpty) {
+      return Center(child: const Text('No Transactions yet '));
+    }
 
     return MyPieChart(
       data: {'Income': totalIncome, 'Expense': totalExpense},

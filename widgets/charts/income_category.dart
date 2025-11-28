@@ -4,36 +4,36 @@ import 'package:money_tracker/models/category.dart';
 import 'package:money_tracker/models/transaction.dart';
 import 'package:money_tracker/utils/formatters.dart';
 
-class ExpenseCategoryChart extends StatelessWidget {
-  const ExpenseCategoryChart({super.key, required this.userTransactions});
+class IncomeCategoryChart extends StatelessWidget {
+  const IncomeCategoryChart({super.key, required this.userTransactions});
 
   final List<Transaction> userTransactions;
 
   @override
   Widget build(BuildContext context) {
-    final expenses = userTransactions
-        .where((t) => t.category.type == CategoryType.expense)
+    final incomes = userTransactions
+        .where((t) => t.category.type == CategoryType.income)
         .toList();
 
-    if (expenses.isEmpty) {
-      return const Center(child: Text("No Expenses yet"));
+    if (incomes.isEmpty) {
+      return const Center(child: Text("No Income yet"));
     }
 
     final Map<Category, double> totals = {};
 
-    for (final t in expenses) {
+    for (final t in incomes) {
       totals[t.category] = (totals[t.category] ?? 0) + t.amount;
     }
 
-    final totalExpense = totals.values.fold(0.0, (a, b) => a + b);
+    final totalIncome = totals.values.fold(0.0, (a, b) => a + b);
 
     final sections = totals.entries.map((entry) {
-      final percent = (entry.value / totalExpense) * 100;
+      final percent = (entry.value / totalIncome) * 100;
 
       return PieChartSectionData(
         value: entry.value,
         color: entry.key.color,
-        title: "${formatNumberForDisplay(percent)}%",
+        title: '${formatNumberForDisplay(percent)}%',
         radius: 40,
         titleStyle: const TextStyle(
           color: Colors.white,
@@ -42,11 +42,10 @@ class ExpenseCategoryChart extends StatelessWidget {
         ),
       );
     }).toList();
-
     return Column(
       children: [
         const Text(
-          "Expense by Category",
+          "Income by Category",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
 
@@ -96,5 +95,6 @@ class ExpenseCategoryChart extends StatelessWidget {
         ),
       ],
     );
+    ;
   }
 }

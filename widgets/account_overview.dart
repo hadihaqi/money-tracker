@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:money_tracker/models/category.dart';
 import 'package:money_tracker/providers/current_user.dart';
 import 'package:money_tracker/providers/transactions.dart';
+import 'package:money_tracker/utils/formatters.dart';
 
 class AccountOverview extends ConsumerWidget {
   const AccountOverview({super.key});
@@ -15,7 +16,7 @@ class AccountOverview extends ConsumerWidget {
     final currentUser = ref.watch(currentUserProvider);
     final currentUserTransactions = ref
         .watch(transactionsProvider)
-        .where((t) => t.userId == currentUser.id);
+        .where((t) => t.userId == currentUser!.id);
 
     final incomesList = currentUserTransactions.where(
       (t) => t.category.type == CategoryType.income,
@@ -27,11 +28,13 @@ class AccountOverview extends ConsumerWidget {
     );
     final totalExpense = expnsesList.fold(0.0, (sum, t) => sum + t.amount);
 
-    final totalBalance = totalIncome - totalExpense;
+    final balance = totalIncome - totalExpense;
+
+    final formattedIncome = formatNumberForDisplay(totalIncome);
+    final formattedExpense = formatNumberForDisplay(totalExpense);
+    final formatedBalance = formatNumberForDisplay(balance);
 
     return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.width / 2,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -62,7 +65,7 @@ class AccountOverview extends ConsumerWidget {
             ),
           ),
           Text(
-            '\$ $totalBalance',
+            '\$ $formatedBalance',
             style: TextStyle(
               fontSize: 40,
               color: Colors.white,
@@ -106,7 +109,7 @@ class AccountOverview extends ConsumerWidget {
                             ),
                           ),
                           Text(
-                            '\$ $totalIncome',
+                            '\$ $formattedIncome',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.white,
@@ -150,7 +153,7 @@ class AccountOverview extends ConsumerWidget {
                           ),
                         ),
                         Text(
-                          '\$ $totalExpense',
+                          '\$ $formattedExpense',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.white,

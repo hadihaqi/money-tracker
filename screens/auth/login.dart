@@ -1,8 +1,16 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:money_tracker/main.dart';
+import 'package:money_tracker/models/user.dart';
+import 'package:money_tracker/providers/auth_provider.dart';
+
 import 'package:money_tracker/providers/users.dart';
 import 'package:money_tracker/screens/auth/signup.dart';
+import 'package:money_tracker/screens/splash_screen.dart';
 import 'package:money_tracker/screens/tabs_screen.dart';
+import 'package:money_tracker/providers/current_user.dart';
+import 'package:money_tracker/services/auth_service.dart';
 
 class Login extends ConsumerStatefulWidget {
   Login({this.email, this.password, super.key});
@@ -24,21 +32,30 @@ class _LoginState extends ConsumerState<Login> {
 
   bool _showPassword = false;
 
-  void _login() {
+  void _login() async {
     if (_formKey.currentState!.validate()) {
+      final users = ref.read(usersProvider);
       _formKey.currentState!.save();
-      final authResult = ref
-          .read(usersProvider)
-          .any(
-            (user) =>
-                user.email == _enteredEmail &&
-                user.password == _enteredPassword,
-          );
-      if (authResult) {
+      User? user = users.firstWhereOrNull(
+        (user) =>
+            user.email == _enteredEmail && user.password == _enteredPassword,
+      );
+      if (user != null) {
+        await AuthService.saveToken(user.id);
+        ref.invalidate(authTokenProvider);
+
+        if (!mounted) {
+          return;
+        }
+
+        // This notifies MyApp to rebuild
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (ctx) => const TabsScreen()),
-          (Route<dynamic> route) => false,
+          MaterialPageRoute(builder: (ctx) => const MyApp()),
+          (route) => false,
         );
+
+        // DO NOT navigate — MyApp handles it
+        return;
       } else {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -53,9 +70,17 @@ class _LoginState extends ConsumerState<Login> {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
+        _formKey.currentState!.validate();
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('Login')),
+        appBar: AppBar(
+          title: Text(
+            'Login',
+            style: TextStyle(
+              color: Theme.of(context).appBarTheme.foregroundColor,
+            ),
+          ),
+        ),
         body: Center(
           child: SingleChildScrollView(
             child: Padding(
@@ -118,7 +143,19 @@ class _LoginState extends ConsumerState<Login> {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _login,
-                      child: const Text('Login'),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 80,
+                          vertical: 15,
+                        ),
+                      ),
+                      child: const Text(
+                        'Submit',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 40),
                     Row(
@@ -138,6 +175,9 @@ class _LoginState extends ConsumerState<Login> {
                             'Sing up',
                             style: TextStyle(
                               decoration: TextDecoration.underline,
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
                             ),
                           ),
                         ),

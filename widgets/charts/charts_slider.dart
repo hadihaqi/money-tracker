@@ -4,6 +4,7 @@ import 'package:money_tracker/providers/current_user.dart';
 import 'package:money_tracker/providers/transactions.dart';
 import 'package:money_tracker/widgets/account_overview.dart';
 import 'package:money_tracker/widgets/charts/expense_category_chart.dart';
+import 'package:money_tracker/widgets/charts/income_category.dart';
 import 'package:money_tracker/widgets/charts/income_expense_chart.dart';
 
 class ChartsSlider extends ConsumerStatefulWidget {
@@ -26,7 +27,7 @@ class _ChartSliderState extends ConsumerState<ChartsSlider> {
     final currentUser = ref.watch(currentUserProvider);
 
     final currentUserTransactions = allTransactions
-        .where((t) => t.userId == currentUser.id)
+        .where((t) => t.userId == currentUser!.id)
         .toList();
 
     return Column(
@@ -40,7 +41,8 @@ class _ChartSliderState extends ConsumerState<ChartsSlider> {
             children: [
               AccountOverview(),
               IncomeExpenseChart(),
-              ExpenseCategoryChart(transactions: currentUserTransactions),
+              ExpenseCategoryChart(userTransactions: currentUserTransactions),
+              IncomeCategoryChart(userTransactions: currentUserTransactions),
             ],
           ),
         ),

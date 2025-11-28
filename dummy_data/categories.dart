@@ -7,25 +7,29 @@ final dummyCategories = [
   Category(
     userId: dummyUsers[0].id,
     title: 'Food',
+    type: CategoryType.expense,
     icon: const Icon(Icons.fastfood),
     color: Colors.orange,
   ),
   Category(
     userId: dummyUsers[0].id,
     title: 'Transport',
+    type: CategoryType.expense,
     icon: const Icon(Icons.directions_car),
     color: Colors.blue,
   ),
   Category(
-    userId: dummyUsers[1].id,
+    userId: dummyUsers[0].id,
     title: 'Shopping',
+    type: CategoryType.expense,
     icon: const Icon(Icons.shopping_bag),
     color: Colors.purple,
   ),
   Category(
-    userId: dummyUsers[2].id,
+    userId: dummyUsers[0].id,
     title: 'Salary',
     icon: const Icon(Icons.attach_money),
+    type: CategoryType.income,
     color: Colors.green,
   ),
 ];

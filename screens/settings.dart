@@ -7,20 +7,28 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        title: Text(
+          'Settings',
+          style: TextStyle(
+            color: Theme.of(context).appBarTheme.foregroundColor,
+          ),
+        ),
+      ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           SettingsItem(
             icon: Icons.person,
-            title: 'Profile',
-            subtitle: 'Edit Info',
+            title: 'Manage Account',
+            subtitle: 'Edit Info , ',
           ),
           SettingsItem(
             icon: Icons.category_rounded,
             title: 'Categories',
             subtitle: 'Manage Categories',
           ),
+          SettingsItem(icon: Icons.logout_outlined, title: 'Sign Out'),
         ],
       ),
     );

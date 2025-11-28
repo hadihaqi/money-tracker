@@ -10,7 +10,7 @@ class DrawerItem extends StatelessWidget {
 
   final IconData icon;
   final String title;
-  final void Function() onSelectScreen;
+  final void Function(String identifier) onSelectScreen;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,9 @@ class DrawerItem extends StatelessWidget {
           fontSize: 24,
         ),
       ),
-      onTap: onSelectScreen,
+      onTap: () {
+        onSelectScreen(title);
+      },
     );
   }
 }

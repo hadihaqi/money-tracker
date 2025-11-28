@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:money_tracker/dummy_data/transactions.dart';
+import 'package:money_tracker/dummy_data/dummy_transactions.dart';
 
 import 'package:money_tracker/models/transaction.dart';
 class TransactionsNotifier extends StateNotifier<List<Transaction>> {

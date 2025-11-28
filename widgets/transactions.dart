@@ -10,7 +10,7 @@ class Transactions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUser = ref.watch(currentUserProvider);
+    final currentUser = ref.watch(currentUserProvider)!;
     final transactions = ref.watch(transactionsProvider);
     final currentUserTransactions = transactions
         .where((t) => t.userId == currentUser.id)
