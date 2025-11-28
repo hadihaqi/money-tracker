@@ -7,9 +7,6 @@ import 'package:money_tracker/providers/auth_provider.dart';
 
 import 'package:money_tracker/providers/users.dart';
 import 'package:money_tracker/screens/auth/signup.dart';
-import 'package:money_tracker/screens/splash_screen.dart';
-import 'package:money_tracker/screens/tabs_screen.dart';
-import 'package:money_tracker/providers/current_user.dart';
 import 'package:money_tracker/services/auth_service.dart';
 
 class Login extends ConsumerStatefulWidget {
@@ -32,9 +29,9 @@ class _LoginState extends ConsumerState<Login> {
 
   bool _showPassword = false;
 
-  void _login() async {
+  void _login(List<User> users) async {
     if (_formKey.currentState!.validate()) {
-      final users = ref.read(usersProvider);
+      users = ref.read(usersProvider);
       _formKey.currentState!.save();
       User? user = users.firstWhereOrNull(
         (user) =>
@@ -67,6 +64,7 @@ class _LoginState extends ConsumerState<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final users = ref.watch(usersProvider);
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -142,7 +140,9 @@ class _LoginState extends ConsumerState<Login> {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: _login,
+                      onPressed: () {
+                        _login(users);
+                      },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 80,

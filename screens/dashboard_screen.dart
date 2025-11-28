@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:money_tracker/providers/current_user.dart';
+import 'package:money_tracker/providers/transactions.dart';
+import 'package:money_tracker/screens/all_transactions.dart';
 
 import 'package:money_tracker/widgets/charts/charts_slider.dart';
 import 'package:money_tracker/widgets/transactions.dart';
 import 'package:money_tracker/widgets/user_overview.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final allTransactions = ref.watch(transactionsProvider);
+
+    final currentUser = ref.watch(currentUserProvider);
+
+    final currentUserTransactions = allTransactions
+        .where((t) => t.userId == currentUser!.id)
+        .toList();
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -33,7 +44,15 @@ class DashboardScreen extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => AllTransactions(
+                            allRecords: currentUserTransactions,
+                          ),
+                        ),
+                      );
+                    },
                     child: Text(
                       'View all',
                       style: TextStyle(

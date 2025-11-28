@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:money_tracker/models/category.dart';
 
@@ -15,16 +13,18 @@ class CategoryList extends ConsumerWidget {
       return const Center(child: Text("No Categories yet"));
     }
     return ListView.builder(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       itemCount: categories.length,
       itemBuilder: (ctx, index) {
         final category = categories[index];
         return ListTile(
+          contentPadding: const EdgeInsets.only(bottom: 10),
           leading: Container(
             width: 50,
             height: 50,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.amber,
+              color: category.color,
             ),
             child: category.icon,
           ),

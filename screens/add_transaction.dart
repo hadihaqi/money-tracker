@@ -225,11 +225,7 @@ class _AddTransactionState extends ConsumerState<AddTransaction> {
                           ),
                         ),
                         onPressed: () async {
-                          await showAddCategorySheet(
-                            context,
-                            ref,
-                            _selectedType,
-                          );
+                          await showAddCategorySheet(context, ref);
                         },
                         child: Text('Add Category'),
                       ),

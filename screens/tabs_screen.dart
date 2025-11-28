@@ -10,7 +10,6 @@ import 'package:money_tracker/screens/dashboard_screen.dart';
 import 'package:money_tracker/screens/reports_screen.dart';
 import 'package:money_tracker/services/auth_service.dart';
 import 'package:money_tracker/widgets/drawer/main_drawer.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});

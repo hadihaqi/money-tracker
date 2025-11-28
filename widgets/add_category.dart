@@ -29,13 +29,13 @@ const availableColors = [
 Future<Map<String, dynamic>?> showAddCategorySheet(
   BuildContext context,
   WidgetRef ref,
-  CategoryType type,
 ) {
   final currentUser = ref.read(currentUserProvider);
 
   final titleController = TextEditingController();
   Color? selectedColor;
   IconData? selectedIcon;
+  CategoryType selectedType = CategoryType.expense;
 
   return showModalBottomSheet<Map<String, dynamic>>(
     context: context,
@@ -91,6 +91,27 @@ Future<Map<String, dynamic>?> showAddCategorySheet(
                           borderSide: BorderSide.none,
                         ),
                       ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    DropdownButtonFormField<CategoryType>(
+                      initialValue: selectedType,
+                      items: const [
+                        DropdownMenuItem(
+                          value: CategoryType.income,
+                          child: Text("Income"),
+                        ),
+                        DropdownMenuItem(
+                          value: CategoryType.expense,
+                          child: Text("Expense"),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          selectedType = value!;
+                        });
+                      },
                     ),
 
                     const SizedBox(height: 20),
@@ -193,7 +214,7 @@ Future<Map<String, dynamic>?> showAddCategorySheet(
                           final newCategory = Category(
                             userId: currentUser!.id,
                             title: titleController.text.trim(),
-                            type: type,
+                            type: selectedType,
                             icon: Icon(selectedIcon),
                             color: selectedColor!,
                           );
